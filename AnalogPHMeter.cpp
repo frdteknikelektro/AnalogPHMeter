@@ -99,7 +99,7 @@ AnalogPHMeter &AnalogPHMeter::calibrationMid(float mid) {
   calibrationValue.value[0] = mid;
   calibrationValue.adc[0] = readADC();
   calibrationValue.value[1] = 4.000f;
-  calibrationValue.adc[1] = 112;
+  calibrationValue.adc[1] = calibrationValue.adc[0] - 302;
   calibrationValue.slope = (calibrationValue.value[1] - calibrationValue.value[0]) /
                            (calibrationValue.adc[1] - calibrationValue.adc[0]);
   calibrationValue.adcOffset = calibrationValue.adc[0] - (int)(calibrationValue.value[0] / calibrationValue.slope);

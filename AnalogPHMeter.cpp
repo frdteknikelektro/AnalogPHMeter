@@ -1,6 +1,5 @@
 #include "AnalogPHMeter.h"
 #include <Arduino.h>
-#include <EEPROM.h>
 
 int AnalogPHMeter::readADC(int oversampling) {
   long pHADCTotal = 0;
@@ -29,7 +28,6 @@ void AnalogPHMeter::inputValue(float value) {
 
 AnalogPHMeter::AnalogPHMeter(unsigned int pin, unsigned int eepromAddress) {
   this->pin = pin;
-  this->eepromAddress = eepromAddress;
   this->pH = 0.00f;
 
   this->stable = false;
@@ -44,7 +42,6 @@ AnalogPHMeter::AnalogPHMeter(unsigned int pin, unsigned int eepromAddress) {
 }
 
 AnalogPHMeter &AnalogPHMeter::initialize(void) {
-  EEPROM.get(eepromAddress, calibrationValue);
   if (calibrationValue.point < '0' || '2' < calibrationValue.point ||
       calibrationValue.adc[0] == 0 || calibrationValue.adc[1] == 0) {
     calibrationValue.point = '0';
@@ -55,7 +52,6 @@ AnalogPHMeter &AnalogPHMeter::initialize(void) {
     calibrationValue.slope = (calibrationValue.value[1] - calibrationValue.value[0]) /
                              (calibrationValue.adc[1] - calibrationValue.adc[0]);
     calibrationValue.adcOffset = calibrationValue.adc[0] - (int)(calibrationValue.value[0] / calibrationValue.slope);
-    EEPROM.put(eepromAddress, calibrationValue);
   }
 
   return *this;
@@ -75,7 +71,6 @@ AnalogPHMeter &AnalogPHMeter::temperatureCompensation(float temperature) {
 }
 
 AnalogPHMeter &AnalogPHMeter::calibration(void) {
-  EEPROM.get(eepromAddress, calibrationValue);
 
   return *this;
 }
@@ -89,7 +84,6 @@ AnalogPHMeter &AnalogPHMeter::calibrationClear(void) {
   calibrationValue.slope = (calibrationValue.value[1] - calibrationValue.value[0]) /
                            (calibrationValue.adc[1] - calibrationValue.adc[0]);
   calibrationValue.adcOffset = calibrationValue.adc[0] - (int)(calibrationValue.value[0] / calibrationValue.slope);
-  EEPROM.put(eepromAddress, calibrationValue);
 
   return *this;
 }
@@ -103,7 +97,6 @@ AnalogPHMeter &AnalogPHMeter::calibrationMid(float mid) {
   calibrationValue.slope = (calibrationValue.value[1] - calibrationValue.value[0]) /
                            (calibrationValue.adc[1] - calibrationValue.adc[0]);
   calibrationValue.adcOffset = calibrationValue.adc[0] - (int)(calibrationValue.value[0] / calibrationValue.slope);
-  EEPROM.put(eepromAddress, calibrationValue);
 
   return *this;
 }
@@ -115,7 +108,6 @@ AnalogPHMeter &AnalogPHMeter::calibrationLow(float low) {
   calibrationValue.slope = (calibrationValue.value[1] - calibrationValue.value[0]) /
                            (calibrationValue.adc[1] - calibrationValue.adc[0]);
   calibrationValue.adcOffset = calibrationValue.adc[0] - (int)(calibrationValue.value[0] / calibrationValue.slope);
-  EEPROM.put(eepromAddress, calibrationValue);
 
   return *this;
 }
@@ -127,7 +119,6 @@ AnalogPHMeter &AnalogPHMeter::calibrationHigh(float high) {
   calibrationValue.slope = (calibrationValue.value[1] - calibrationValue.value[0]) /
                            (calibrationValue.adc[1] - calibrationValue.adc[0]);
   calibrationValue.adcOffset = calibrationValue.adc[0] - (int)(calibrationValue.value[0] / calibrationValue.slope);
-  EEPROM.put(eepromAddress, calibrationValue);
 
   return *this;
 }
@@ -136,4 +127,13 @@ AnalogPHMeter &AnalogPHMeter::factoryReset(void) {
   calibrationClear();
 
   return *this;
+}
+
+void AnalogPHMeter::putPHCalibrationValue(unsigned char* calibrationVal, unsigned int size) {
+  unsigned char* pBuffer = (unsigned char*)&calibrationValue;
+  for (size_t i = 0; i < size; i++) {
+    *pBuffer = *calibrationVal;
+    pBuffer++;
+    calibrationVal++;
+  }
 }

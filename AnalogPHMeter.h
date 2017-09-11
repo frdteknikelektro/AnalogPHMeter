@@ -14,7 +14,6 @@ private:
   struct PHCalibrationValue calibrationValue;
 
   unsigned int pin;
-  unsigned int eepromAddress;
   float pH;
   float temperature;
   bool debug;
@@ -46,6 +45,8 @@ public:
   float getpH(void) { return this->pH; };
   float getTemperature(void) { return this->temperature; };
   float getCalibrationPoint(void) { return this->calibrationValue.point; };
+  struct PHCalibrationValue getPHCalibrationValue(void) { return calibrationValue; };
+  void putPHCalibrationValue(unsigned char* calibrationVal, unsigned int size);
 
   bool ispHStable(void) { return this->stable; };
   void setpHPrecision(float precision) { this->precision = precision; };

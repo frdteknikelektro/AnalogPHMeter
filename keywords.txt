@@ -1,8 +1,7 @@
 AnalogPHMeter	KEYWORD1
 
 initialize	KEYWORD2
-singleReading	KEYWORD2
-temperatureCompensation
+temperatureCompensation	KEYWORD2
 calibration	KEYWORD2
 calibrationClear	KEYWORD2
 calibrationMid	KEYWORD2
@@ -13,5 +12,6 @@ factoryReset	KEYWORD2
 getpH	KEYWORD2
 getTemperature	KEYWORD2
 getCalibrationPoint	KEYWORD2
+getCalibrationValue KEYWORD2
 ispHStable	KEYWORD2
 setpHPrecision	KEYWORD2

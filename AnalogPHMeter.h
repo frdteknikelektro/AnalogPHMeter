@@ -10,11 +10,10 @@ struct PHCalibrationValue {
 };
 
 class AnalogPHMeter {
-private:
+ private:
   struct PHCalibrationValue calibrationValue;
 
   unsigned int pin;
-  unsigned int eepromAddress;
   float pH;
   float temperature;
   bool debug;
@@ -29,10 +28,10 @@ private:
   int readADC(int oversampling = 64);
   void inputValue(float value);
 
-public:
-  AnalogPHMeter(unsigned int pin, unsigned int eepromAddress = 0);
+ public:
+  AnalogPHMeter(unsigned int pin);
 
-  AnalogPHMeter &initialize(void);
+  AnalogPHMeter &initialize(struct PHCalibrationValue = (struct PHCalibrationValue){});
 
   AnalogPHMeter &singleReading(void);
   AnalogPHMeter &temperatureCompensation(float temperature);
@@ -46,6 +45,9 @@ public:
   float getpH(void) { return this->pH; };
   float getTemperature(void) { return this->temperature; };
   float getCalibrationPoint(void) { return this->calibrationValue.point; };
+  struct PHCalibrationValue getCalibrationValue(void) {
+    return calibrationValue;
+  };
 
   bool ispHStable(void) { return this->stable; };
   void setpHPrecision(float precision) { this->precision = precision; };

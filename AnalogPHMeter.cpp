@@ -115,11 +115,11 @@ AnalogPHMeter &AnalogPHMeter::calibrationLow(float low) {
 }
 
 AnalogPHMeter &AnalogPHMeter::calibrationHigh(float high) {
-  calibrationValue.point = '2';
   if (calibrationValue.point == '1') {
     calibrationValue.value[1] = calibrationValue.value[0];
-    calibrationValue.adc[1] = calibrationValue.value[0];
+    calibrationValue.adc[1] = calibrationValue.adc[0];
   }
+  calibrationValue.point = '2';
   calibrationValue.value[0] = high;
   calibrationValue.adc[0] = readADC();
   calibrationValue.slope = (calibrationValue.value[1] - calibrationValue.value[0]) /

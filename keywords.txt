@@ -12,6 +12,6 @@ factoryReset	KEYWORD2
 getpH	KEYWORD2
 getTemperature	KEYWORD2
 getCalibrationPoint	KEYWORD2
-getCalibrationValue KEYWORD2
+getCalibrationValue	KEYWORD2
 ispHStable	KEYWORD2
 setpHPrecision	KEYWORD2

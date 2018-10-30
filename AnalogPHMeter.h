@@ -51,6 +51,9 @@ class AnalogPHMeter {
 
   bool ispHStable(void) { return this->stable; };
   void setpHPrecision(float precision) { this->precision = precision; };
+  unsigned char getpHStableCount(void) { return this->stableCount; };
+  float getSumOfDeltaValue(void) { return this->sumOfDeltaValue; };
+  float getDeltaValue(void) { return this->deltaValue; };
 };
 
 #endif

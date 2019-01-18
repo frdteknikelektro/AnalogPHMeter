@@ -13,5 +13,14 @@ getpH	KEYWORD2
 getTemperature	KEYWORD2
 getCalibrationPoint	KEYWORD2
 getCalibrationValue	KEYWORD2
+getpHStableCount    KEYWORD2
+getSumOfDeltaValue  KEYWORD2
+getDeltaValue   KEYWORD2
+getPrecision    KEYWORD2
+getDefaultSlope KEYWORD2
+getDefaultAdcAt7    KEYWORD2
+
 ispHStable	KEYWORD2
 setpHPrecision	KEYWORD2
+setDefaultSlope KEYWORD2
+setDefaultAdcAt7    KEYWORD2

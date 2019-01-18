@@ -28,7 +28,7 @@ void AnalogPHMeter::inputValue(float value) {
   if (stable) stableCount = 10;
 }
 
-AnalogPHMeter::AnalogPHMeter(unsigned int pin) {
+AnalogPHMeter::AnalogPHMeter(unsigned int pin, float defaultSlope, int defaultAdcAt7) {
   this->pin = pin;
   this->pH = 0.00f;
 
@@ -41,20 +41,16 @@ AnalogPHMeter::AnalogPHMeter(unsigned int pin) {
   this->sumOfDeltaValue = 0.00f;
   this->deltaValue = 0.00f;
   this->precision = 0.050f;
+
+  this->defaultSlope = defaultSlope;
+  this->defaultAdcAt7 = defaultAdcAt7;
 }
 
 AnalogPHMeter &AnalogPHMeter::initialize(struct PHCalibrationValue calibrationValue) {
   this->calibrationValue = calibrationValue;
   if (this->calibrationValue.point < '0' || '2' < this->calibrationValue.point ||
       this->calibrationValue.adc[0] == 0 || this->calibrationValue.adc[1] == 0) {
-    this->calibrationValue.point = '0';
-    this->calibrationValue.value[0] = 7.000f;
-    this->calibrationValue.adc[0] = 410;
-    this->calibrationValue.value[1] = 4.000f;
-    this->calibrationValue.adc[1] = 112;
-    this->calibrationValue.slope = (this->calibrationValue.value[1] - this->calibrationValue.value[0]) /
-                             (this->calibrationValue.adc[1] - this->calibrationValue.adc[0]);
-    this->calibrationValue.adcOffset = this->calibrationValue.adc[0] - (int)(this->calibrationValue.value[0] / this->calibrationValue.slope);
+    this->calibrationClear();
   }
 
   return *this;
@@ -80,11 +76,10 @@ AnalogPHMeter &AnalogPHMeter::calibration(void) {
 AnalogPHMeter &AnalogPHMeter::calibrationClear(void) {
   calibrationValue.point = '0';
   calibrationValue.value[0] = 7.000f;
-  calibrationValue.adc[0] = 410;
+  calibrationValue.adc[0] = defaultAdcAt7;
   calibrationValue.value[1] = 4.000f;
-  calibrationValue.adc[1] = 112;
-  calibrationValue.slope = (calibrationValue.value[1] - calibrationValue.value[0]) /
-                           (calibrationValue.adc[1] - calibrationValue.adc[0]);
+  calibrationValue.adc[1] = (int) (defaultAdcAt7 + ((calibrationValue.value[1] - calibrationValue.value[0]) / defaultSlope));
+  calibrationValue.slope = defaultSlope;
   calibrationValue.adcOffset = calibrationValue.adc[0] - (int)(calibrationValue.value[0] / calibrationValue.slope);
 
   return *this;
@@ -95,7 +90,7 @@ AnalogPHMeter &AnalogPHMeter::calibrationMid(float mid) {
   calibrationValue.value[0] = mid;
   calibrationValue.adc[0] = readADC();
   calibrationValue.value[1] = 4.000f;
-  calibrationValue.adc[1] = calibrationValue.adc[0] - 302;
+  calibrationValue.adc[1] = (int) (calibrationValue.adc[0] + ((calibrationValue.value[1] - calibrationValue.value[0]) / defaultSlope));
   calibrationValue.slope = (calibrationValue.value[1] - calibrationValue.value[0]) /
                            (calibrationValue.adc[1] - calibrationValue.adc[0]);
   calibrationValue.adcOffset = calibrationValue.adc[0] - (int)(calibrationValue.value[0] / calibrationValue.slope);

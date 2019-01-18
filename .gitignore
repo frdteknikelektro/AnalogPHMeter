@@ -29,3 +29,4 @@
 *.app
 
 .gcc-flags.json
+.vscode

@@ -25,11 +25,14 @@ class AnalogPHMeter {
   float valueBefore, deltaValue, sumOfDeltaValue;
   float deltaValueBuffer[10];
 
+  float defaultSlope;
+  int defaultAdcAt7;
+
   int readADC(int oversampling = 64);
   void inputValue(float value);
 
  public:
-  AnalogPHMeter(unsigned int pin);
+  AnalogPHMeter(unsigned int pin, float defaultSlope = 0.01f, int defaultAdcAt7 = 410);
 
   AnalogPHMeter &initialize(struct PHCalibrationValue = (struct PHCalibrationValue){});
 
@@ -48,9 +51,17 @@ class AnalogPHMeter {
   struct PHCalibrationValue getCalibrationValue(void) {
     return calibrationValue;
   };
+  unsigned char getpHStableCount(void) { return this->stableCount; };
+  float getSumOfDeltaValue(void) { return this->sumOfDeltaValue; };
+  float getDeltaValue(void) { return this->deltaValue; };
+  float getPrecision(void) { return this->precision; };
+  float getDefaultSlope(void) { return this->defaultSlope; };
+  float getDefaultAdcAt7(void) { return this->defaultAdcAt7; };
 
   bool ispHStable(void) { return this->stable; };
-  void setpHPrecision(float precision) { this->precision = precision; };
+  AnalogPHMeter & setpHPrecision(float precision) { this->precision = precision; return *this; };
+  AnalogPHMeter & setDefaultSlope(float slope) { this->defaultSlope = slope; return *this; };
+  AnalogPHMeter & setDefaultAdcAt7(int adc) { this->defaultAdcAt7 = defaultAdcAt7; return *this; };
 };
 
 #endif
